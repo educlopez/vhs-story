@@ -2,14 +2,14 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
-// Configuración de Cloudinary
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Base images IDs que usaremos para las transformaciones
+// Base images IDs
 const baseImages = [
   "horror-base/dark-forest.jpg",
   "horror-base/abandoned-house.jpg",
@@ -20,22 +20,26 @@ const baseImages = [
 
 export async function POST(request: Request) {
   try {
+    console.log("Received request to generate background");
     const { text } = await request.json();
+    console.log("Text received:", text);
 
-    // Seleccionar una imagen base basada en el contenido del texto
+    // Select a base image based on the content of the text
     const baseImage = selectBaseImage(text);
+    console.log("Selected base image:", baseImage);
 
-    // Crear URL con transformaciones
+    // Create URL with transformations
     const imageUrl = cloudinary.url(baseImage, {
       transformation: [
-        // Aplicar transformaciones basadas en el contenido
+        // Apply transformations based on content
         ...getHorrorEffects(text),
-        // Ajustes generales
+        // General adjustments
         { width: 1200, height: 800, crop: "fill" },
         { quality: "auto" },
         { fetch_format: "auto" },
       ],
     });
+    console.log("Generated image URL:", imageUrl);
 
     return NextResponse.json({
       imageUrl,
@@ -44,7 +48,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
-      { error: "Failed to generate image" },
+      { error: "Failed to generate image", details: error.message },
       { status: 500 }
     );
   }

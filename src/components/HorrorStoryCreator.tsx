@@ -27,10 +27,27 @@ export function HorrorStoryCreator() {
   const [currentFrame, setCurrentFrame] = useState<StoryFrame | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [maxDuration] = useState(10);
   const [editingParagraphIndex, setEditingParagraphIndex] = useState<
     number | null
   >(null);
+  const [videoGenerationStatus, setVideoGenerationStatus] =
+    useState<string>("");
+  const [videoPublicId, setVideoPublicId] = useState<string | null>(null);
+  const [videoGenerationError, setVideoGenerationError] = useState<
+    string | null
+  >(null);
+  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (pollingInterval.current) {
+        clearInterval(pollingInterval.current);
+      }
+    };
+  }, []);
+
   const lastKeyPressTime = useRef<number>(0);
   const generationDelay = 2000;
 
@@ -62,15 +79,26 @@ export function HorrorStoryCreator() {
     setIsGenerating(true);
 
     try {
+      console.log("Generating new frame for text:", text);
       const response = await fetch("/api/generate-background", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
 
-      if (!response.ok) throw new Error("Failed to generate image");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorData.error}`
+        );
+      }
 
       const data = await response.json();
+      console.log("Response from generate-background:", data);
+
+      if (!data.imageUrl) {
+        throw new Error("No image URL in the response");
+      }
 
       const newFrame: StoryFrame = {
         id: `frame-${Date.now()}`,
@@ -84,6 +112,7 @@ export function HorrorStoryCreator() {
       setCurrentFrame(newFrame);
     } catch (error) {
       console.error("Error generating frame:", error);
+      setVideoGenerationError(`Error generating frame: ${error.message}`);
     } finally {
       setIsGenerating(false);
     }
@@ -109,6 +138,73 @@ export function HorrorStoryCreator() {
     }
   };
 
+  const generateVideo = async () => {
+    if (frames.length < 2 || isProcessingVideo) return;
+    setIsProcessingVideo(true);
+    setVideoUrl(null);
+    setVideoPublicId(null);
+    setVideoGenerationStatus("Iniciando generación de video...");
+    setVideoGenerationError(null);
+
+    try {
+      const response = await fetch("/api/generate-video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frames }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate video");
+      }
+
+      console.log("API Response:", data);
+
+      if (data.success && data.publicId) {
+        setVideoPublicId(data.publicId);
+        setVideoGenerationStatus(
+          "Video en proceso de generación. Por favor, espere..."
+        );
+        startPolling(data.publicId);
+      } else {
+        setVideoGenerationStatus("Error en la generación del video.");
+        setVideoGenerationError("Respuesta inesperada del servidor");
+      }
+    } catch (error) {
+      console.error("Error generating video:", error);
+      setVideoGenerationError(`Error: ${error.message}`);
+      setVideoGenerationStatus("Error en la generación del video.");
+    } finally {
+      setIsProcessingVideo(false);
+    }
+  };
+
+  const startPolling = (publicId: string) => {
+    if (pollingInterval.current) {
+      clearInterval(pollingInterval.current);
+    }
+
+    pollingInterval.current = setInterval(async () => {
+      try {
+        const response = await fetch(
+          `/api/check-video-status?publicId=${publicId}`
+        );
+        const data = await response.json();
+
+        if (data.status === "complete") {
+          setVideoUrl(data.url);
+          setVideoGenerationStatus("Video generado con éxito!");
+          clearInterval(pollingInterval.current!);
+        } else if (data.status === "failed") {
+          setVideoGenerationError("La generación del video ha fallado.");
+          clearInterval(pollingInterval.current!);
+        }
+      } catch (error) {
+        console.error("Error checking video status:", error);
+      }
+    }, 5000); // Check every 5 seconds
+  };
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -200,7 +296,13 @@ export function HorrorStoryCreator() {
             <div className="bg-gray-800 rounded-lg p-4">
               <h3 className="text-xl font-bold mb-4">Scene Preview</h3>
               <div className="relative h-[400px] overflow-hidden rounded-lg">
-                {currentFrame ? (
+                {videoUrl ? (
+                  <video
+                    src={videoUrl}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                ) : currentFrame ? (
                   <CldImage
                     width="800"
                     height="500"
@@ -268,22 +370,33 @@ export function HorrorStoryCreator() {
               </div>
             </div>
 
+            {/* Video Generation Status and Error */}
+            {(videoGenerationStatus || videoGenerationError) && (
+              <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+                <h3 className="text-xl font-bold mb-2">
+                  Estado de generación del video
+                </h3>
+                {videoGenerationStatus && <p>{videoGenerationStatus}</p>}
+                {videoGenerationError && (
+                  <p className="text-red-500 mt-2">{videoGenerationError}</p>
+                )}
+              </div>
+            )}
+
             {/* Generate Video Button */}
             <button
-              onClick={() => {
-                /* generateVideo implementation */
-              }}
+              onClick={generateVideo}
               disabled={frames.length < 2 || isProcessingVideo}
               className={`w-full px-6 py-3 rounded-lg flex items-center justify-center space-x-2
-                       ${
-                         frames.length < 2 || isProcessingVideo
-                           ? "bg-gray-700 text-gray-500"
-                           : "bg-red-600 hover:bg-red-700"
-                       }`}
+                 ${
+                   frames.length < 2 || isProcessingVideo
+                     ? "bg-gray-700 text-gray-500"
+                     : "bg-red-600 hover:bg-red-700"
+                 }`}
             >
               <Video className="w-5 h-5" />
               <span>
-                {isProcessingVideo ? "Processing..." : "Generate Video"}
+                {isProcessingVideo ? "Procesando..." : "Generar Video"}
               </span>
             </button>
           </div>
