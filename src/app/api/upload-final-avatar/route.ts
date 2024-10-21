@@ -24,10 +24,15 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ secure_url: result.secure_url });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error uploading final avatar:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to upload final avatar" },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to upload final avatar",
+      },
       { status: 500 }
     );
   }

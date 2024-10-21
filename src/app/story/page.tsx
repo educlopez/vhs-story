@@ -58,13 +58,16 @@ const Story = () => {
   }, [updateFinalAvatar]);
 
   const handleChoice = (nextScene: string) => {
-    if (selectedStory.scenes[nextScene]) {
+    if (selectedStory?.scenes[nextScene]) {
       setCurrentScene(nextScene);
       setDisplayedText("");
       setIsTyping(true);
       updateFinalAvatar();
-    } else {
-      setSelectedStory((prev) => ({ ...prev, finalScene: currentScene }));
+    } else if (selectedStory) {
+      setSelectedStory((prev) => {
+        if (!prev) return prev;
+        return { ...prev, finalScene: currentScene };
+      });
       updateFinalAvatar();
       router.push("/end");
     }

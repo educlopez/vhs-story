@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { Story, StoryScene } from "@/app/types";
+import { Story } from "@/app/types";
 
 interface StoryContextType {
   name: string;
@@ -8,7 +8,7 @@ interface StoryContextType {
   image: string;
   setImage: (image: string) => void;
   selectedStory: Story | null;
-  setSelectedStory: (story: Story | ((prev: Story) => Story)) => void;
+  setSelectedStory: React.Dispatch<React.SetStateAction<Story | null>>;
   currentScene: string;
   setCurrentScene: (scene: string) => void;
   finalAvatarImage: string;

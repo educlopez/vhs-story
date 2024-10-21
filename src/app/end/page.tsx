@@ -48,7 +48,8 @@ const End = () => {
         transition={{ delay: 0.2 }}
         className="text-3xl font-bold mb-6"
       >
-        Congratulations, {name}! You've completed "{selectedStory?.title}"
+        Congratulations, {name}! You&apos;ve completed &ldquo;
+        {selectedStory?.title}&rdquo;
       </motion.h1>
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}

@@ -3,7 +3,11 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useStory } from "@/context/StoryContext";
-import { CldUploadWidget, CldImage } from "next-cloudinary";
+import {
+  CldUploadWidget,
+  CldImage,
+  CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 import { Button } from "@/app/components/ui/button";
 import {
   Select,
@@ -14,14 +18,31 @@ import {
 } from "@/app/components/ui/select";
 import { stories } from "@/data/stories";
 
+// Add this interface near the top of your file
+interface TransparentData {
+  secure_url: string;
+}
+
+// Add this interface near the top of your file
+interface UploadData {
+  secure_url: string;
+  // Add other properties as needed
+}
+
+// Update the UploadResult interface
+// interface UploadResult {
+//   info: CloudinaryUploadWidgetInfo;
+// }
+
 const Start = () => {
   const router = useRouter();
   const { setName, setImage, setSelectedStory, setCurrentScene } = useStory();
   const [imageSize, setImageSize] = useState({ width: 300, height: 300 });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedStoryId, setSelectedStoryId] = useState<string>("");
-  const [uploadData, setUploadData] = useState(null);
-  const [transparentData, setTransparentData] = useState(null);
+  const [uploadData, setUploadData] = useState<UploadData | null>(null);
+  const [transparentData, setTransparentData] =
+    useState<TransparentData | null>(null);
 
   const isDevelopment = true;
 
@@ -60,7 +81,7 @@ const Start = () => {
       if (story) {
         setSelectedStory(story);
         setCurrentScene(story.initialScene);
-        if (!isDevelopment) {
+        if (!isDevelopment && transparentData) {
           setImage(transparentData.secure_url);
         }
         router.push("/story");
@@ -151,13 +172,14 @@ const Start = () => {
             {!uploadData ? (
               <CldUploadWidget
                 uploadPreset="halloween-story"
-                onSuccess={(result: any) => {
+                onSuccess={(result) => {
+                  const info = result.info as CloudinaryUploadWidgetInfo;
                   setImageSize({
-                    width: result?.info?.width,
-                    height: result?.info?.height,
+                    width: info.width,
+                    height: info.height,
                   });
-                  setUploadData(result?.info);
-                  setImagePreview(result?.info?.secure_url);
+                  setUploadData(info);
+                  setImagePreview(info.secure_url);
                 }}
               >
                 {({ open }) => (

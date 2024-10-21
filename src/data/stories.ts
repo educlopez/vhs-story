@@ -6,6 +6,7 @@ export const stories: Story[] = [
     title: "Demo",
     description: "Explore a mysterious mansion with dark secrets...",
     initialScene: "entrance",
+    finalScene: "end",
     scenes: {
       entrance: {
         text: "You stand before an imposing Victorian mansion. Its windows seem to watch your every move...",
@@ -35,6 +36,7 @@ export const stories: Story[] = [
     title: "The Haunted Mansion",
     description: "Explore a mysterious mansion with dark secrets...",
     initialScene: "entrance",
+    finalScene: "end",
     scenes: {
       entrance: {
         text: "You stand before an imposing Victorian mansion. Its windows seem to watch your every move...",
@@ -111,7 +113,7 @@ export const stories: Story[] = [
             text: "Climb down to investigate",
             nextScene: "underground-chamber",
             imageEffects: {
-              filter: "brightness(0.5)",
+              filter: "grayscale",
               backgroundImage:
                 "horror-base/backgrounds/mansion/mansion-underground-chamber",
             },
@@ -120,7 +122,7 @@ export const stories: Story[] = [
             text: "Step away from the well",
             nextScene: "garden",
             imageEffects: {
-              filter: "contrast(1.5)",
+              filter: "grayscale",
               backgroundImage: "horror-base/backgrounds/mansion/mansion-garden",
             },
           },
@@ -134,7 +136,7 @@ export const stories: Story[] = [
             text: "Enter the room",
             nextScene: "haunted-room",
             imageEffects: {
-              filter: "saturate(0.2)",
+              filter: "grayscale",
               backgroundImage:
                 "horror-base/backgrounds/mansion/mansion-haunted-room",
             },
@@ -157,6 +159,7 @@ export const stories: Story[] = [
     title: "The Vampire's Curse",
     description: "A night out takes a dark turn...",
     initialScene: "party",
+    finalScene: "end",
     scenes: {
       party: {
         text: "The Halloween party is in full swing when you notice someone watching you from the shadows...",

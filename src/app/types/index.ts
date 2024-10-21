@@ -3,6 +3,7 @@ export interface Story {
   title: string;
   description: string;
   initialScene: string;
+  finalScene: string;
   scenes: {
     [key: string]: StoryScene;
   };
