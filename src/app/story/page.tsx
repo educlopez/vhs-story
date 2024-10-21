@@ -37,9 +37,14 @@ const Story = () => {
   }, [currentScene, selectedStory, router]);
 
   const handleChoice = (nextScene: string) => {
-    setCurrentScene(nextScene);
-    setDisplayedText("");
-    setIsTyping(true);
+    if (selectedStory.scenes[nextScene]) {
+      setCurrentScene(nextScene);
+      setDisplayedText("");
+      setIsTyping(true);
+    } else {
+      // If the next scene doesn't exist, the story has ended
+      router.push("/end");
+    }
   };
 
   if (!selectedStory || !currentScene) return null;

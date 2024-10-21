@@ -7,14 +7,16 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const End = () => {
-  const { name, image } = useStory();
+  const { name, image, selectedStory } = useStory();
 
   const handleDownload = () => {
     // Implement download functionality
+    console.log("Download functionality not implemented yet");
   };
 
   const handleShare = () => {
     // Implement share functionality
+    console.log("Share functionality not implemented yet");
   };
 
   return (
@@ -30,7 +32,7 @@ const End = () => {
         transition={{ delay: 0.2 }}
         className="text-3xl font-bold mb-6"
       >
-        Thank you for playing, {name}!
+        Congratulations, {name}! You've completed "{selectedStory?.title}"
       </motion.h1>
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
@@ -43,13 +45,22 @@ const End = () => {
           height="300"
           src={image}
           alt={`${name}'s final avatar`}
-          className="mx-auto"
+          className="mx-auto rounded-full"
         />
       </motion.div>
-      <motion.div
+      <motion.p
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
+        className="text-lg mb-6"
+      >
+        Your journey through the {selectedStory?.title} has come to an end. We
+        hope you enjoyed your adventure!
+      </motion.p>
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.8 }}
         className="space-x-4"
       >
         <Button onClick={handleDownload}>Download Avatar</Button>
@@ -58,7 +69,7 @@ const End = () => {
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 1 }}
         className="mt-8"
       >
         <Link href="/">

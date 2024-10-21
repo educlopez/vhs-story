@@ -60,28 +60,31 @@ export const stories: Story[] = [
             nextScene: "well",
             imageEffects: {
               filter: "grayscale",
-              backgroundImage: "halloween-story/old-well",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-old-well",
             },
           },
           {
             text: "Look for a hidden entrance",
             nextScene: "hidden-door",
             imageEffects: {
-              backgroundImage: "halloween-story/hidden-door",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-hidden-door",
             },
           },
         ],
       },
       well: {
         text: "As you peer down the well, a strange glow emanates from the depths. You hear a faint whisper calling your name...",
-        background: "horror-base/backgrounds/mansion/old-well",
+        background: "horror-base/backgrounds/mansion/mansion-old-well",
         choices: [
           {
             text: "Climb down to investigate",
             nextScene: "underground-chamber",
             imageEffects: {
               filter: "brightness(0.5)",
-              backgroundImage: "halloween-story/underground-chamber",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-underground-chamber",
             },
           },
           {
@@ -89,7 +92,7 @@ export const stories: Story[] = [
             nextScene: "garden",
             imageEffects: {
               filter: "contrast(1.5)",
-              backgroundImage: "halloween-story/mansion-garden",
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-garden",
             },
           },
         ],
@@ -103,14 +106,16 @@ export const stories: Story[] = [
             nextScene: "haunted-room",
             imageEffects: {
               filter: "saturate(0.2)",
-              backgroundImage: "halloween-story/haunted-room",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-haunted-room",
             },
           },
           {
             text: "Continue down the hallway",
             nextScene: "end-of-hallway",
             imageEffects: {
-              backgroundImage: "halloween-story/hallway",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-hallway",
             },
           },
         ],
@@ -133,14 +138,14 @@ export const stories: Story[] = [
             nextScene: "encounter",
             imageEffects: {
               filter: "grayscale",
-              backgroundImage: "halloween-story/vampire-lair",
+              backgroundImage: "horror-base/backgrounds/mansion/vampire-lair",
             },
           },
           {
             text: "Stay with your friends",
             nextScene: "dance",
             imageEffects: {
-              backgroundImage: "halloween-story/party-crowd",
+              backgroundImage: "horror-base/backgrounds/mansion/party-crowd",
             },
           },
         ],
