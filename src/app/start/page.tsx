@@ -39,7 +39,7 @@ const Start = () => {
   const [transparentData, setTransparentData] =
     useState<TransparentData | null>(null);
 
-  const isDevelopment = true;
+  const isDevelopment = false;
 
   console.log(
     isDevelopment ? "Development mode is active." : "Production mode is active."
