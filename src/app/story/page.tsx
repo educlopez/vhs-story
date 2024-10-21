@@ -47,56 +47,57 @@ const Story = () => {
   const scene = selectedStory.scenes[currentScene];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-8"
-    >
-      <h1 className="text-3xl font-bold mb-6">{selectedStory.title}</h1>
-      <div className="flex mb-6">
-        <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="w-1/3"
-        >
-          <CldImage
-            width="300"
-            height="300"
-            src={image}
-            alt={`${name}'s avatar`}
-          />
-        </motion.div>
-        <motion.div
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="w-2/3 pl-6"
-        >
-          <p className="text-lg mb-4">{displayedText}</p>
-          <AnimatePresence>
-            {!isTyping && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                {scene.choices.map((choice, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => handleChoice(choice.nextScene)}
-                    className="mr-4 mb-4"
+    <div className="relative h-screen w-screen overflow-hidden">
+      <CldImage
+        width="1920"
+        height="1080"
+        src={scene.background}
+        sizes="100vw"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-50">
+        <div className="container mx-auto px-4 py-8 relative z-10">
+          <h1 className="text-3xl font-bold mb-6 text-white">
+            {selectedStory.title}
+          </h1>
+          <div className="flex mb-6">
+            <div className="w-1/3">
+              <CldImage
+                width="300"
+                height="300"
+                src={image}
+                alt={`${name}'s avatar`}
+                className="rounded-full"
+                underlay={scene.background}
+              />
+            </div>
+            <div className="w-2/3 pl-6">
+              <p className="text-lg mb-4 text-white">{displayedText}</p>
+              <AnimatePresence>
+                {!isTyping && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                   >
-                    {choice.text}
-                  </Button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+                    {scene.choices.map((choice, index) => (
+                      <Button
+                        key={index}
+                        onClick={() => handleChoice(choice.nextScene)}
+                        className="mr-4 mb-4"
+                      >
+                        {choice.text}
+                      </Button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

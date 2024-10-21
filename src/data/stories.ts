@@ -9,34 +9,35 @@ export const stories: Story[] = [
     scenes: {
       entrance: {
         text: "You stand before an imposing Victorian mansion. Its windows seem to watch your every move...",
-        background: "/backgrounds/mansion-exterior.jpg",
+        background: "horror-base/backgrounds/mansion/mansion-exterior",
         choices: [
           {
             text: "Enter through the front door",
             nextScene: "foyer",
             imageEffects: {
-              backgroundImage: "halloween-story/mansion-interior",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-interior",
             },
           },
           {
             text: "Look for another way in",
             nextScene: "garden",
             imageEffects: {
-              backgroundImage: "halloween-story/mansion-garden",
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-garden",
             },
           },
         ],
       },
       foyer: {
         text: "The grand foyer is dimly lit by flickering candles. A ghostly presence sends chills down your spine...",
-        background: "/backgrounds/mansion-foyer.jpg",
+        background: "horror-base/backgrounds/mansion/mansion-foyer",
         choices: [
           {
             text: "Investigate the strange noises upstairs",
             nextScene: "upstairs",
             imageEffects: {
               filter: "grayscale",
-              backgroundImage: "halloween-story/mansion-stairs",
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-stairs",
             },
           },
           {
@@ -44,14 +45,15 @@ export const stories: Story[] = [
             nextScene: "basement",
             imageEffects: {
               filter: "sepia",
-              backgroundImage: "halloween-story/mansion-basement",
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-basement",
             },
           },
         ],
       },
       garden: {
         text: "You find yourself in an overgrown garden, where twisted vines and dark shadows seem to come alive...",
-        background: "/backgrounds/mansion-garden.jpg",
+        background: "horror-base/backgrounds/mansion/mansion-garden",
         choices: [
           {
             text: "Inspect the old well",
@@ -72,7 +74,7 @@ export const stories: Story[] = [
       },
       well: {
         text: "As you peer down the well, a strange glow emanates from the depths. You hear a faint whisper calling your name...",
-        background: "/backgrounds/old-well.jpg",
+        background: "horror-base/backgrounds/mansion/old-well",
         choices: [
           {
             text: "Climb down to investigate",
@@ -94,7 +96,7 @@ export const stories: Story[] = [
       },
       upstairs: {
         text: "You creep up the stairs, each step creaking beneath your feet. At the top, you see a flickering light coming from a room on the left...",
-        background: "/backgrounds/mansion-stairs.jpg",
+        background: "horror-base/backgrounds/mansion/mansion-stairs",
         choices: [
           {
             text: "Enter the room",
@@ -124,7 +126,7 @@ export const stories: Story[] = [
     scenes: {
       party: {
         text: "The Halloween party is in full swing when you notice someone watching you from the shadows...",
-        background: "/backgrounds/party.jpg",
+        background: "horror-base/backgrounds/mansion/party",
         choices: [
           {
             text: "Approach the mysterious stranger",
