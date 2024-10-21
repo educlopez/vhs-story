@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useStory } from "@/context/StoryContext";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
@@ -20,6 +20,8 @@ const Start = () => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedStoryId, setSelectedStoryId] = useState<string>("");
+  const [uploadData, setUploadData] = useState(null);
+  const [transparentData, setTransparentData] = useState(null);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -32,22 +34,52 @@ const Start = () => {
   };
 
   const handleStartAdventure = () => {
-    if (imagePreview && selectedStoryId) {
+    if (transparentData && selectedStoryId) {
       const story = stories.find((s) => s.id === selectedStoryId);
       if (story) {
         setSelectedStory(story);
         setCurrentScene(story.initialScene);
+        setImage(transparentData.secure_url);
         router.push("/story");
       }
     } else {
-      alert("Please upload an image and select a story before starting.");
+      alert("Please wait for the image processing to complete and select a story before starting.");
     }
   };
+
+  useEffect(() => {
+    if (!uploadData) return;
+    (async function run() {
+      const results = await fetch('/api/image-cloud', {
+        method: 'POST',
+        body: JSON.stringify({
+          image: uploadData.secure_url,
+          options: {
+            background_removal: 'cloudinary_ai'
+          }
+        })
+      }).then(r => r.json());
+
+      const transparentResult = await checkStatus();
+
+      setTransparentData(transparentResult);
+
+      async function checkStatus() {
+        const resource = await fetch(`/api/resource/?publicId=${results.public_id}`).then(r => r.json());
+        if (resource.info.background_removal.cloudinary_ai.status === 'pending') {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return await checkStatus();
+        }
+        return resource;
+      }
+    })();
+  }, [uploadData]);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Prepare Your Adventure</h1>
 
+      {/* Name input */}
       <div className="mb-6">
         <label htmlFor="name" className="block text-sm font-medium mb-2">
           Your Name
@@ -61,6 +93,7 @@ const Start = () => {
         />
       </div>
 
+      {/* Story selection */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-2">
           Choose Your Story
@@ -79,11 +112,12 @@ const Start = () => {
         </Select>
       </div>
 
+      {/* Image upload */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-2">
           Upload Your Avatar
         </label>
-        {!imagePreview ? (
+        {!uploadData ? (
           <CldUploadWidget
             uploadPreset="halloween-story"
             onSuccess={(result: any) => {
@@ -91,7 +125,7 @@ const Start = () => {
                 width: result?.info?.width,
                 height: result?.info?.height,
               });
-              setImage(result?.info?.public_id);
+              setUploadData(result?.info);
               setImagePreview(result?.info?.secure_url);
             }}
           >
@@ -100,20 +134,25 @@ const Start = () => {
         ) : (
           <div>
             <h2 className="text-xl font-semibold mb-2">Image Preview</h2>
-            <CldImage
-              width={imageSize.width}
-              height={imageSize.height}
-              src={imagePreview}
-              alt="Avatar preview"
-              className="max-w-full h-auto"
-            />
+            {uploadData && !transparentData && (
+              <p>Processing image... Please wait.</p>
+            )}
+            {transparentData && (
+              <CldImage
+                width={imageSize.width}
+                height={imageSize.height}
+                src={transparentData.secure_url}
+                alt="Avatar preview"
+                className="max-w-full h-auto"
+              />
+            )}
           </div>
         )}
       </div>
 
       <Button
         onClick={handleStartAdventure}
-        disabled={!imagePreview || !selectedStoryId}
+        disabled={!transparentData || !selectedStoryId}
       >
         Start Adventure
       </Button>
