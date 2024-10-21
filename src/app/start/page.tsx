@@ -2,37 +2,31 @@
 
 import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 import { useStory } from "@/context/StoryContext";
 import {
   CldUploadWidget,
   CldImage,
   CloudinaryUploadWidgetInfo,
 } from "next-cloudinary";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select";
+} from "@/components/ui/select";
 import { stories } from "@/data/stories";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Add this interface near the top of your file
 interface TransparentData {
   secure_url: string;
 }
 
-// Add this interface near the top of your file
 interface UploadData {
   secure_url: string;
-  // Add other properties as needed
 }
-
-// Update the UploadResult interface
-// interface UploadResult {
-//   info: CloudinaryUploadWidgetInfo;
-// }
 
 const Start = () => {
   const router = useRouter();
@@ -126,100 +120,110 @@ const Start = () => {
   }, [uploadData]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Prepare Your Adventure</h1>
+    <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
+      <Card className="w-[380px] bg-black text-white">
+        <CardHeader>
+          <CardTitle>Prepare Your Story</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          {!isDevelopment && (
+            <>
+              {/* Name input */}
+              <div className="mb-6">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Your Name
+                </label>
+                <Input
+                  type="text"
+                  id="name"
+                  placeholder="Enter your name"
+                  onChange={handleNameChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
 
-      {!isDevelopment && (
-        <>
-          {/* Name input */}
-          <div className="mb-6">
-            <label htmlFor="name" className="block text-sm font-medium mb-2">
-              Your Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              placeholder="Enter your name"
-              onChange={handleNameChange}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+              {/* Story selection */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">
+                  Choose Your Story
+                </label>
+                <Select onValueChange={handleStorySelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a story" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stories.map((story) => (
+                      <SelectItem key={story.id} value={story.id}>
+                        {story.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-          {/* Story selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">
-              Choose Your Story
-            </label>
-            <Select onValueChange={handleStorySelect}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a story" />
-              </SelectTrigger>
-              <SelectContent>
-                {stories.map((story) => (
-                  <SelectItem key={story.id} value={story.id}>
-                    {story.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Image upload */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">
-              Upload Your Avatar
-            </label>
-            {!uploadData ? (
-              <CldUploadWidget
-                uploadPreset="halloween-story"
-                onSuccess={(result) => {
-                  const info = result.info as CloudinaryUploadWidgetInfo;
-                  setImageSize({
-                    width: info.width,
-                    height: info.height,
-                  });
-                  setUploadData(info);
-                  setImagePreview(info.secure_url);
-                }}
-              >
-                {({ open }) => (
-                  <Button onClick={() => open()}>Upload Image</Button>
-                )}
-              </CldUploadWidget>
-            ) : (
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Image Preview</h2>
-                {uploadData && !transparentData && (
-                  <p>Processing image... Please wait.</p>
-                )}
-                {transparentData && (
-                  <CldImage
-                    width={imageSize.width}
-                    height={imageSize.height}
-                    src={transparentData.secure_url}
-                    alt="Avatar preview"
-                    className="max-w-full h-auto"
-                  />
+              {/* Image upload */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">
+                  Upload Your Avatar
+                </label>
+                {!uploadData ? (
+                  <CldUploadWidget
+                    uploadPreset="halloween-story"
+                    onSuccess={(result) => {
+                      const info = result.info as CloudinaryUploadWidgetInfo;
+                      setImageSize({
+                        width: info.width,
+                        height: info.height,
+                      });
+                      setUploadData(info);
+                      setImagePreview(info.secure_url);
+                    }}
+                  >
+                    {({ open }) => (
+                      <Button onClick={() => open()}>Upload Image</Button>
+                    )}
+                  </CldUploadWidget>
+                ) : (
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2">
+                      Image Preview
+                    </h2>
+                    {uploadData && !transparentData && (
+                      <p>Processing image... Please wait.</p>
+                    )}
+                    {transparentData && (
+                      <CldImage
+                        width={imageSize.width}
+                        height={imageSize.height}
+                        src={transparentData.secure_url}
+                        alt="Avatar preview"
+                        className="max-w-full h-auto"
+                      />
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        </>
-      )}
+            </>
+          )}
 
-      {isDevelopment && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Development Mode</h2>
-          <p>Using default values for name, image, and story.</p>
-        </div>
-      )}
+          {isDevelopment && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Development Mode</h2>
+              <p>Using default values for name, image, and story.</p>
+            </div>
+          )}
 
-      <Button
-        onClick={handleStartAdventure}
-        disabled={(!transparentData && !isDevelopment) || !selectedStoryId}
-      >
-        Start Adventure
-      </Button>
+          <Button
+            onClick={handleStartAdventure}
+            disabled={(!transparentData && !isDevelopment) || !selectedStoryId}
+          >
+            Start Adventure
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

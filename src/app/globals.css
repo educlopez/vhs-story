@@ -5,6 +5,56 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+.horror-title {
+  font-family: var(--font-horror);
+}
+.crt {
+  background-image: url(./assets/images/crt.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+@keyframes vhs-blur {
+  0%,
+  100% {
+    filter: blur(1px);
+    transform: translate(0, 0);
+  }
+  33% {
+    filter: blur(2px);
+    transform: translate(-1px, 0);
+  }
+  66% {
+    filter: blur(1.5px);
+    transform: translate(1px, 0);
+  }
+}
+
+.vhs-effect {
+  animation: vhs-blur 0.2s infinite;
+  filter: contrast(1.2) brightness(1.1);
+}
+
+.vhs-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.vhs-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
 
 @layer utilities {
   .text-balance {

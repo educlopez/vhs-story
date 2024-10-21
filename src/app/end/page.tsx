@@ -2,7 +2,7 @@
 
 import { useStory } from "@/context/StoryContext";
 import { CldImage } from "next-cloudinary";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 

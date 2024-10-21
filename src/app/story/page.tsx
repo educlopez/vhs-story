@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useStory } from "@/context/StoryContext";
 import { CldImage, getCldImageUrl } from "next-cloudinary";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
