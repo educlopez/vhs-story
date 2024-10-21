@@ -37,6 +37,10 @@ export const stories: Story[] = [
     description: "Explore a mysterious mansion with dark secrets...",
     initialScene: "entrance",
     finalScene: "end",
+    monsterTransformation: {
+      scene: "basement",
+      monster: "ghost",
+    },
     scenes: {
       entrance: {
         text: "You stand before an imposing Victorian mansion. Its windows seem to watch your every move...",
@@ -147,6 +151,27 @@ export const stories: Story[] = [
             imageEffects: {
               backgroundImage:
                 "horror-base/backgrounds/mansion/mansion-hallway",
+            },
+          },
+        ],
+      },
+      basement: {
+        text: "As you enter the basement, a strange mist envelops you. You feel your body changing...",
+        background: "horror-base/backgrounds/mansion/mansion-basement",
+        choices: [
+          {
+            text: "Embrace the transformation",
+            nextScene: "ghost-form",
+            imageEffects: {
+              filter: "grayscale",
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-ghost",
+            },
+          },
+          {
+            text: "Fight against it",
+            nextScene: "escape-attempt",
+            imageEffects: {
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-escape",
             },
           },
         ],

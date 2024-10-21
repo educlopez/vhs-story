@@ -4,6 +4,10 @@ export interface Story {
   description: string;
   initialScene: string;
   finalScene: string;
+  monsterTransformation?: {
+    scene: string;
+    monster: string;
+  };
   scenes: {
     [key: string]: StoryScene;
   };

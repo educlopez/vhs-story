@@ -17,8 +17,6 @@ const pixelFont = localFont({
   variable: "--font-pixel",
 });
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Interactive Halloween Story",
   description: "Choose your own spooky adventure",

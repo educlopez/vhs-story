@@ -5,9 +5,21 @@ import { CldImage } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const End = () => {
-  const { name, finalAvatarImage, selectedStory } = useStory();
+  const { name, finalAvatarImage, selectedStory, image } = useStory();
+  const [imageKey, setImageKey] = useState(Date.now());
+  const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    console.log("Final Avatar Image:", finalAvatarImage);
+    setImageKey(Date.now());
+  }, [finalAvatarImage]);
+
+  useEffect(() => {
+    forceUpdate({});
+  }, [finalAvatarImage]);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -61,12 +73,22 @@ const End = () => {
         className="mb-6"
       >
         <CldImage
+          key={imageKey}
           width="300"
           height="300"
           src={finalAvatarImage}
           alt={`${name}'s final avatar`}
           className="mx-auto rounded-full"
           underlay={selectedStory?.scenes[selectedStory.finalScene]?.background}
+          replace={
+            selectedStory?.monsterTransformation
+              ? {
+                  from: "person",
+                  to: selectedStory.monsterTransformation.monster || "monster",
+                  preserveGeometry: true,
+                }
+              : undefined
+          }
         />
       </motion.div>
       <motion.p

@@ -20,16 +20,36 @@ const Story = () => {
   } = useStory();
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const [isMonsterForm, setIsMonsterForm] = useState(false);
 
   const updateFinalAvatar = useCallback(() => {
     if (selectedStory?.scenes[currentScene] && image) {
       const avatarUrl = getCldImageUrl({
         src: image,
+        width: 300,
+        height: 300,
+        crop: "fill",
         underlay: selectedStory.scenes[currentScene].background,
+        replace: isMonsterForm
+          ? {
+              from: "person",
+              to: selectedStory.monsterTransformation?.monster || "monster",
+              preserveGeometry: true,
+            }
+          : undefined,
       });
       setFinalAvatarImage(avatarUrl);
     }
-  }, [selectedStory, currentScene, image, setFinalAvatarImage]);
+  }, [selectedStory, currentScene, image, setFinalAvatarImage, isMonsterForm]);
+
+  useEffect(() => {
+    if (
+      selectedStory?.monsterTransformation &&
+      currentScene === selectedStory.monsterTransformation.scene
+    ) {
+      setIsMonsterForm(true);
+    }
+  }, [currentScene, selectedStory]);
 
   useEffect(() => {
     if (!selectedStory) {
@@ -62,6 +82,12 @@ const Story = () => {
       setCurrentScene(nextScene);
       setDisplayedText("");
       setIsTyping(true);
+      if (
+        selectedStory.monsterTransformation &&
+        nextScene === selectedStory.monsterTransformation.scene
+      ) {
+        setIsMonsterForm(true);
+      }
       updateFinalAvatar();
     } else if (selectedStory) {
       setSelectedStory((prev) => {
@@ -69,7 +95,9 @@ const Story = () => {
         return { ...prev, finalScene: currentScene };
       });
       updateFinalAvatar();
-      router.push("/end");
+      setTimeout(() => {
+        router.push("/end");
+      }, 100);
     }
   };
 
@@ -122,8 +150,19 @@ const Story = () => {
               height="100"
               src={image}
               alt={`${name}'s avatar`}
-              className="rounded-full"
+              className={`rounded-full ${isMonsterForm ? "monster-form" : ""}`}
               underlay={scene.background}
+              replace={
+                isMonsterForm
+                  ? {
+                      from: "person",
+                      to:
+                        selectedStory?.monsterTransformation?.monster ||
+                        "monster",
+                      preserveGeometry: true,
+                    }
+                  : undefined
+              }
             />
           </div>
         </div>
