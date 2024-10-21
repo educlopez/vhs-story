@@ -78,18 +78,7 @@ const Story = () => {
   }, [updateFinalAvatar]);
 
   const handleChoice = (nextScene: string) => {
-    if (selectedStory?.scenes[nextScene]) {
-      setCurrentScene(nextScene);
-      setDisplayedText("");
-      setIsTyping(true);
-      if (
-        selectedStory.monsterTransformation &&
-        nextScene === selectedStory.monsterTransformation.scene
-      ) {
-        setIsMonsterForm(true);
-      }
-      updateFinalAvatar();
-    } else if (selectedStory) {
+    if (nextScene === "end" || !selectedStory?.scenes[nextScene]) {
       setSelectedStory((prev) => {
         if (!prev) return prev;
         return { ...prev, finalScene: currentScene };
@@ -98,6 +87,17 @@ const Story = () => {
       setTimeout(() => {
         router.push("/end");
       }, 100);
+    } else {
+      setCurrentScene(nextScene);
+      setDisplayedText("");
+      setIsTyping(true);
+      if (
+        selectedStory?.monsterTransformation &&
+        nextScene === selectedStory.monsterTransformation.scene
+      ) {
+        setIsMonsterForm(true);
+      }
+      updateFinalAvatar();
     }
   };
 
@@ -134,14 +134,18 @@ const Story = () => {
                   exit={{ opacity: 0, y: -20 }}
                   className="flex flex-col justify-center items-center gap-2 mb-2"
                 >
-                  {scene.choices.map((choice, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => handleChoice(choice.nextScene)}
-                    >
-                      {choice.text}
-                    </Button>
-                  ))}
+                  {scene.choices.length > 0 ? (
+                    scene.choices.map((choice, index) => (
+                      <Button
+                        key={index}
+                        onClick={() => handleChoice(choice.nextScene)}
+                      >
+                        {choice.text}
+                      </Button>
+                    ))
+                  ) : (
+                    <Button onClick={() => handleChoice("end")}>Finish</Button>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
