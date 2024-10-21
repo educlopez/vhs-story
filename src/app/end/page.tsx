@@ -1,5 +1,5 @@
 "use client";
-
+import { Icon } from "@/components/RetroIcons";
 import { useStory } from "@/context/StoryContext";
 import { CldImage } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
@@ -42,11 +42,14 @@ const End = () => {
       exit={{ opacity: 0 }}
       className="container mx-auto px-4 py-8 text-center"
     >
+      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+        Resume <Icon name="play" size={24} />
+      </span>
       <motion.h1
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="text-3xl font-bold mb-6"
+        className="text-3xl font-bold mb-6 text-white"
       >
         Congratulations, {name}! You&apos;ve completed &ldquo;
         {selectedStory?.title}&rdquo;
@@ -70,7 +73,7 @@ const End = () => {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="text-lg mb-6"
+        className="text-lg mb-6 text-white"
       >
         Your journey through the {selectedStory?.title} has come to an end. We
         hope you enjoyed your adventure!

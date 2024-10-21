@@ -4,6 +4,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useStory } from "@/context/StoryContext";
+import { Icon } from "@/components/RetroIcons";
 import {
   CldUploadWidget,
   CldImage,
@@ -50,8 +51,8 @@ const Start = () => {
       setImage(
         "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0"
       );
-      setSelectedStory(stories.find((s) => s.id === "demo") || null);
-      setSelectedStoryId("demo");
+      setSelectedStory(stories.find((s) => s.id === "haunted-mansion") || null);
+      setSelectedStoryId("haunted-mansion");
       setTransparentData({
         secure_url:
           "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0",
@@ -121,6 +122,9 @@ const Start = () => {
 
   return (
     <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
+      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+        Start <Icon name="play" size={24} />
+      </span>
       <Card className="w-[380px] bg-black text-white">
         <CardHeader>
           <CardTitle>Prepare Your Story</CardTitle>

@@ -39,7 +39,7 @@ const Story = () => {
 
     const scene = selectedStory.scenes[currentScene];
     if (scene) {
-      let index = 0;
+      let index = -1;
       const intervalId = setInterval(() => {
         setDisplayedText((prev) => prev + scene.text[index]);
         index++;
@@ -89,9 +89,9 @@ const Story = () => {
       />
       <div className="absolute inset-0 bg-black bg-opacity-50 ">
         <div className="container mx-auto px-4 py-8 relative z-10 h-screen w-full">
-          <h1 className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+          <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
             {selectedStory.title} <Icon name="play" size={24} />
-          </h1>
+          </span>
           <div className="flex mb-6">
             <div className="w-full pl-6">
               <p className="text-lg mb-4 text-white">{displayedText}</p>
@@ -104,12 +104,12 @@ const Story = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
+                  className="flex flex-col justify-center items-center gap-2 mb-2"
                 >
                   {scene.choices.map((choice, index) => (
                     <Button
                       key={index}
                       onClick={() => handleChoice(choice.nextScene)}
-                      className="mr-4 mb-4"
                     >
                       {choice.text}
                     </Button>
