@@ -1,18 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useStory } from "@/context/StoryContext";
-import { CldImage } from "next-cloudinary";
+import { CldImage, getCldImageUrl } from "next-cloudinary";
 import { Button } from "@/app/components/ui/button";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Story = () => {
   const router = useRouter();
-  const { name, image, selectedStory, currentScene, setCurrentScene } =
-    useStory();
+  const {
+    name,
+    image,
+    selectedStory,
+    currentScene,
+    setCurrentScene,
+    setFinalAvatarImage,
+    setSelectedStory,
+  } = useStory();
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+
+  const updateFinalAvatar = useCallback(() => {
+    if (selectedStory?.scenes[currentScene] && image) {
+      const avatarUrl = getCldImageUrl({
+        src: image,
+        underlay: selectedStory.scenes[currentScene].background,
+      });
+      setFinalAvatarImage(avatarUrl);
+    }
+  }, [selectedStory, currentScene, image, setFinalAvatarImage]);
 
   useEffect(() => {
     if (!selectedStory) {
@@ -36,13 +53,19 @@ const Story = () => {
     }
   }, [currentScene, selectedStory, router]);
 
+  useEffect(() => {
+    updateFinalAvatar();
+  }, [updateFinalAvatar]);
+
   const handleChoice = (nextScene: string) => {
     if (selectedStory.scenes[nextScene]) {
       setCurrentScene(nextScene);
       setDisplayedText("");
       setIsTyping(true);
+      updateFinalAvatar();
     } else {
-      // If the next scene doesn't exist, the story has ended
+      setSelectedStory((prev) => ({ ...prev, finalScene: currentScene }));
+      updateFinalAvatar();
       router.push("/end");
     }
   };

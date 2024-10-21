@@ -35,8 +35,8 @@ const Start = () => {
       setImage(
         "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0"
       );
-      setSelectedStory(stories.find((s) => s.id === "haunted-mansion") || null);
-      setSelectedStoryId("haunted-mansion");
+      setSelectedStory(stories.find((s) => s.id === "demo") || null);
+      setSelectedStoryId("demo");
       setTransparentData({
         secure_url:
           "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0",

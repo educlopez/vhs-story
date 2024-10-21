@@ -8,9 +8,11 @@ interface StoryContextType {
   image: string;
   setImage: (image: string) => void;
   selectedStory: Story | null;
-  setSelectedStory: (story: Story) => void;
+  setSelectedStory: (story: Story | ((prev: Story) => Story)) => void;
   currentScene: string;
   setCurrentScene: (scene: string) => void;
+  finalAvatarImage: string;
+  setFinalAvatarImage: (image: string) => void;
 }
 
 const StoryContext = createContext<StoryContextType | undefined>(undefined);
@@ -22,6 +24,7 @@ export const StoryProvider: React.FC<{ children: ReactNode }> = ({
   const [image, setImage] = useState<string>("");
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [currentScene, setCurrentScene] = useState<string>("");
+  const [finalAvatarImage, setFinalAvatarImage] = useState<string>("");
 
   return (
     <StoryContext.Provider
@@ -34,6 +37,8 @@ export const StoryProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedStory,
         currentScene,
         setCurrentScene,
+        finalAvatarImage,
+        setFinalAvatarImage,
       }}
     >
       {children}

@@ -7,16 +7,32 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const End = () => {
-  const { name, image, selectedStory } = useStory();
+  const { name, finalAvatarImage, selectedStory } = useStory();
 
   const handleDownload = () => {
-    // Implement download functionality
-    console.log("Download functionality not implemented yet");
+    const link = document.createElement("a");
+    link.href = finalAvatarImage;
+    link.download = `${name}_final_avatar.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleShare = () => {
-    // Implement share functionality
-    console.log("Share functionality not implemented yet");
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `My Adventure in ${selectedStory?.title}`,
+          text: `Check out my final avatar from my adventure in ${selectedStory?.title}!`,
+          url: finalAvatarImage,
+        })
+        .catch(console.error);
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      alert(
+        "Sharing is not supported on this browser. You can copy the image URL to share manually."
+      );
+    }
   };
 
   return (
@@ -43,9 +59,10 @@ const End = () => {
         <CldImage
           width="300"
           height="300"
-          src={image}
+          src={finalAvatarImage}
           alt={`${name}'s final avatar`}
           className="mx-auto rounded-full"
+          underlay={selectedStory?.scenes[selectedStory.finalScene]?.background}
         />
       </motion.div>
       <motion.p

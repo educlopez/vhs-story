@@ -2,6 +2,35 @@ import { Story } from "@/app/types";
 
 export const stories: Story[] = [
   {
+    id: "demo",
+    title: "Demo",
+    description: "Explore a mysterious mansion with dark secrets...",
+    initialScene: "entrance",
+    scenes: {
+      entrance: {
+        text: "You stand before an imposing Victorian mansion. Its windows seem to watch your every move...",
+        background: "horror-base/backgrounds/mansion/mansion-exterior",
+        choices: [
+          {
+            text: "Enter through the front door",
+            nextScene: "foyer",
+            imageEffects: {
+              backgroundImage:
+                "horror-base/backgrounds/mansion/mansion-interior",
+            },
+          },
+          {
+            text: "Look for another way in",
+            nextScene: "garden",
+            imageEffects: {
+              backgroundImage: "horror-base/backgrounds/mansion/mansion-garden",
+            },
+          },
+        ],
+      },
+    },
+  },
+  {
     id: "haunted-mansion",
     title: "The Haunted Mansion",
     description: "Explore a mysterious mansion with dark secrets...",
