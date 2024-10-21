@@ -1,5 +1,5 @@
 "use client";
-
+import { Icon } from "@/components/RetroIcons";
 import { useState, useEffect, useCallback } from "react";
 import { useStory } from "@/context/StoryContext";
 import { CldImage, getCldImageUrl } from "next-cloudinary";
@@ -87,44 +87,44 @@ const Story = () => {
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-50">
-        <div className="container mx-auto px-4 py-8 relative z-10">
-          <h1 className="text-3xl font-bold mb-6 text-white">
-            {selectedStory.title}
+      <div className="absolute inset-0 bg-black bg-opacity-50 ">
+        <div className="container mx-auto px-4 py-8 relative z-10 h-screen w-full">
+          <h1 className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+            {selectedStory.title} <Icon name="play" size={24} />
           </h1>
           <div className="flex mb-6">
-            <div className="w-1/3">
-              <CldImage
-                width="300"
-                height="300"
-                src={image}
-                alt={`${name}'s avatar`}
-                className="rounded-full"
-                underlay={scene.background}
-              />
-            </div>
-            <div className="w-2/3 pl-6">
+            <div className="w-full pl-6">
               <p className="text-lg mb-4 text-white">{displayedText}</p>
-              <AnimatePresence>
-                {!isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    {scene.choices.map((choice, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => handleChoice(choice.nextScene)}
-                        className="mr-4 mb-4"
-                      >
-                        {choice.text}
-                      </Button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
+          </div>
+          <div className="flex flex-col items-center justify-center absolute bottom-12 w-full">
+            <AnimatePresence>
+              {!isTyping && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  {scene.choices.map((choice, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => handleChoice(choice.nextScene)}
+                      className="mr-4 mb-4"
+                    >
+                      {choice.text}
+                    </Button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <CldImage
+              width="100"
+              height="100"
+              src={image}
+              alt={`${name}'s avatar`}
+              className="rounded-full"
+              underlay={scene.background}
+            />
           </div>
         </div>
       </div>
