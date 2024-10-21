@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react";
 
 export default function NoiseBackground() {
-  const canvasRef = useRef(null);
-  let wWidth;
-  let wHeight;
-  const noiseData = [];
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  let wWidth: number;
+  let wHeight: number;
+  const noiseData: ImageData[] = [];
   let frame = 0;
-  let loopTimeout;
-  let resizeThrottle;
+  let loopTimeout: number;
+  let resizeThrottle: number;
 
-  const createNoise = (ctx) => {
+  const createNoise = (ctx: CanvasRenderingContext2D) => {
     const idata = ctx.createImageData(wWidth, wHeight);
     const buffer32 = new Uint32Array(idata.data.buffer);
     let len = buffer32.length;
@@ -23,7 +23,7 @@ export default function NoiseBackground() {
     noiseData.push(idata);
   };
 
-  const paintNoise = (ctx) => {
+  const paintNoise = (ctx: CanvasRenderingContext2D) => {
     if (frame === 9) {
       frame = 0;
     } else {
@@ -33,7 +33,7 @@ export default function NoiseBackground() {
     ctx.putImageData(noiseData[frame], 0, 0);
   };
 
-  const loop = (ctx) => {
+  const loop = (ctx: CanvasRenderingContext2D) => {
     paintNoise(ctx);
 
     loopTimeout = window.setTimeout(() => {
@@ -41,12 +41,14 @@ export default function NoiseBackground() {
     }, 1000 / 25);
   };
 
-  const setup = (ctx) => {
+  const setup = (ctx: CanvasRenderingContext2D) => {
     wWidth = window.innerWidth;
     wHeight = window.innerHeight + 100;
 
-    canvasRef.current.width = wWidth;
-    canvasRef.current.height = wHeight;
+    if (canvasRef.current) {
+      canvasRef.current.width = wWidth;
+      canvasRef.current.height = wHeight;
+    }
 
     noiseData.length = 0;
 
@@ -58,7 +60,12 @@ export default function NoiseBackground() {
   };
 
   useEffect(() => {
-    const ctx = canvasRef.current.getContext("2d");
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      throw new Error("Canvas not found");
+    }
+
+    const ctx = canvas.getContext("2d");
     if (!ctx) {
       throw new Error("2D context not supported or canvas not found");
     }
@@ -79,6 +86,8 @@ export default function NoiseBackground() {
     // Cleanup function
     return () => {
       window.removeEventListener("resize", resizeHandler);
+      window.clearTimeout(loopTimeout);
+      window.clearTimeout(resizeThrottle);
     };
   }, []);
 
