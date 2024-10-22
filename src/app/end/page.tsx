@@ -104,7 +104,7 @@ const End = () => {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="space-x-4"
+        className="s inline-flex flex-col gap-2"
       >
         <Button onClick={handleDownload}>Download Avatar</Button>
         <Button onClick={handleShare}>Share on Social Media</Button>

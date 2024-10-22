@@ -97,18 +97,22 @@ const Story = () => {
       />
       <div className="absolute inset-0 bg-black bg-opacity-50 ">
         <div className="container mx-auto px-4 py-8 relative z-10 h-screen w-full">
-          <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
-            {selectedStory.title} <Icon name="play" size={24} />
-          </span>
-          <div className="flex mb-6">
-            <div className="w-full pl-6 ">
-              <TextGenerateEffect
-                duration={2}
-                filter={false}
-                words={scene.text}
-              />
+          <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
+            <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+              {selectedStory.title} <Icon name="play" size={24} />
+            </span>
+            <div className="flex mb-6">
+              <div className="w-full pl-6 ">
+                <TextGenerateEffect
+                  key={`text-generate-${currentScene}`}
+                  duration={2}
+                  filter={false}
+                  words={scene.text}
+                />
+              </div>
             </div>
           </div>
+
           <div className="flex flex-col items-center justify-center absolute bottom-12 w-full">
             <AnimatePresence>
               <motion.div
