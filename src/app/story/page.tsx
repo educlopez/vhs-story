@@ -6,7 +6,7 @@ import { CldImage, getCldImageUrl } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { TextGenerateEffect } from "@/components/TextGenerate";
 const Story = () => {
   const router = useRouter();
   const {
@@ -18,8 +18,6 @@ const Story = () => {
     setFinalAvatarImage,
     setSelectedStory,
   } = useStory();
-  const [displayedText, setDisplayedText] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
   const [isMonsterForm, setIsMonsterForm] = useState(false);
 
   const updateFinalAvatar = useCallback(() => {
@@ -54,24 +52,8 @@ const Story = () => {
   useEffect(() => {
     if (!selectedStory) {
       router.push("/start");
-      return;
     }
-
-    const scene = selectedStory.scenes[currentScene];
-    if (scene) {
-      let index = -1;
-      const intervalId = setInterval(() => {
-        setDisplayedText((prev) => prev + scene.text[index]);
-        index++;
-        if (index === scene.text.length) {
-          clearInterval(intervalId);
-          setIsTyping(false);
-        }
-      }, 50);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [currentScene, selectedStory, router]);
+  }, [selectedStory, router]);
 
   useEffect(() => {
     updateFinalAvatar();
@@ -89,8 +71,6 @@ const Story = () => {
       }, 100);
     } else {
       setCurrentScene(nextScene);
-      setDisplayedText("");
-      setIsTyping(true);
       if (
         selectedStory?.monsterTransformation &&
         nextScene === selectedStory.monsterTransformation.scene
@@ -121,33 +101,35 @@ const Story = () => {
             {selectedStory.title} <Icon name="play" size={24} />
           </span>
           <div className="flex mb-6">
-            <div className="w-full pl-6">
-              <p className="text-lg mb-4 text-white">{displayedText}</p>
+            <div className="w-full pl-6 ">
+              <TextGenerateEffect
+                duration={2}
+                filter={false}
+                words={scene.text}
+              />
             </div>
           </div>
           <div className="flex flex-col items-center justify-center absolute bottom-12 w-full">
             <AnimatePresence>
-              {!isTyping && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="flex flex-col justify-center items-center gap-2 mb-2"
-                >
-                  {scene.choices.length > 0 ? (
-                    scene.choices.map((choice, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => handleChoice(choice.nextScene)}
-                      >
-                        {choice.text}
-                      </Button>
-                    ))
-                  ) : (
-                    <Button onClick={() => handleChoice("end")}>Finish</Button>
-                  )}
-                </motion.div>
-              )}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex flex-col justify-center items-center gap-2 mb-2"
+              >
+                {scene.choices.length > 0 ? (
+                  scene.choices.map((choice, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => handleChoice(choice.nextScene)}
+                    >
+                      {choice.text}
+                    </Button>
+                  ))
+                ) : (
+                  <Button onClick={() => handleChoice("end")}>Finish</Button>
+                )}
+              </motion.div>
             </AnimatePresence>
             <CldImage
               width="100"
