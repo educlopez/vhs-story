@@ -24,13 +24,13 @@ export const metadata: Metadata = {
   },
   description: "Choose your own spooky adventure",
   keywords: [
-    "components, Smooth animations, Awesome test components, framermotion, framer-motion, Interactive components",
+    "Interactive horror story, AI-generated spooky tales, Halloween storytelling, Personalized horror experience, Custom scary story generator, User-driven narrative, Horror plot generator, Choose your path horror, Spooky story creator, Ghost story generator, Haunted house adventure, Thriller plot generation, Creepy character creation, AI horror narrative, Scary story writing tool, Paranormal adventure generator, Interactive ghost tale, Horror decision-based game, Spooky atmosphere generator, Halloween AI story",
   ],
   openGraph: {
-    title: "SmoothUI",
+    title: "Interactive Halloween Story",
     description: "Choose your own spooky adventure",
     url: "https://vhs-story.vercel.app",
-    siteName: "SmoothUI",
+    siteName: "Interactive Halloween Story",
     images: [
       {
         url: "https://vhs-story.vercel.app/og.jpg",
