@@ -52,16 +52,16 @@ const End = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-8 text-center"
+      className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8 text-center"
     >
-      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center vhs-effect">
         Resume <Icon name="play" size={24} />
       </span>
       <motion.h1
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="text-3xl font-bold mb-6 text-white"
+        className="text-xl md:text-3xl font-bold mb-6 text-white"
       >
         Congratulations, {name}! You&apos;ve completed &ldquo;
         {selectedStory?.title}&rdquo;

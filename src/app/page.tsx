@@ -22,11 +22,7 @@ export default function Home() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-16 text-center h-full flex flex-col justify-center items-center w-1/2">
         <div className="relative">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 horror-title uppercase text-[#FF5802] relative">
-            Welcome to <br />
-            Your Own Story
-          </h1>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 horror-title uppercase text-[#FF5802] vhs-effect absolute left-0 top-0">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 horror-title uppercase text-white vhs-effect">
             Welcome to <br />
             Your Own Story
           </h1>

@@ -20,7 +20,9 @@ import {
 } from "@/components/ui/select";
 import { stories } from "@/data/stories";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { motion } from "framer-motion";
+import mansion from "@/app/assets/images/mansion-vhs.png";
+import vampire from "@/app/assets/images/vampire-vhs.png";
 interface TransparentData {
   secure_url: string;
 }
@@ -38,6 +40,9 @@ const Start = () => {
   const [uploadData, setUploadData] = useState<UploadData | null>(null);
   const [transparentData, setTransparentData] =
     useState<TransparentData | null>(null);
+  const [selectedStoryImage, setSelectedStoryImage] = useState<string | null>(
+    null
+  );
 
   const isDevelopment = false;
 
@@ -67,7 +72,12 @@ const Start = () => {
   const handleStorySelect = (value: string) => {
     setSelectedStoryId(value);
     const story = stories.find((s) => s.id === value);
-    if (story) setSelectedStory(story);
+    if (story) {
+      setSelectedStory(story);
+      setSelectedStoryImage(
+        story.id === "haunted-mansion" ? mansion.src : vampire.src
+      );
+    }
   };
 
   const handleStartAdventure = () => {
@@ -121,113 +131,131 @@ const Start = () => {
   }, [uploadData]);
 
   return (
-    <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
-      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
+    <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8 flex flex-col justify-between">
+      <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center vhs-effect">
         Start <Icon name="play" size={24} />
       </span>
-      <Card className="w-[380px] bg-black text-white">
-        <CardHeader>
-          <CardTitle>Prepare Your Story</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          {!isDevelopment && (
-            <>
-              {/* Name input */}
-              <div className="mb-6">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  Your Name
-                </label>
-                <Input
-                  type="text"
-                  id="name"
-                  placeholder="Enter your name"
-                  onChange={handleNameChange}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
 
-              {/* Story selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">
-                  Choose Your Story
-                </label>
-                <Select onValueChange={handleStorySelect}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a story" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {stories.map((story) => (
-                      <SelectItem key={story.id} value={story.id}>
-                        {story.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Image upload */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">
-                  Upload Your Avatar
-                </label>
-                {!uploadData ? (
-                  <CldUploadWidget
-                    uploadPreset="halloween-story"
-                    onSuccess={(result) => {
-                      const info = result.info as CloudinaryUploadWidgetInfo;
-                      setImageSize({
-                        width: info.width,
-                        height: info.height,
-                      });
-                      setUploadData(info);
-                      setImagePreview(info.secure_url);
-                    }}
+      <div className="flex flex-col md:flex-row justify-between w-full">
+        <Card className="w-[380px] bg-black text-white border-none">
+          <CardHeader>
+            <CardTitle>Prepare Your Story</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            {!isDevelopment && (
+              <>
+                {/* Name input */}
+                <div className="mb-6">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium mb-2"
                   >
-                    {({ open }) => (
-                      <Button onClick={() => open()}>Upload Image</Button>
-                    )}
-                  </CldUploadWidget>
-                ) : (
-                  <div>
-                    <h2 className="text-xl font-semibold mb-2">
-                      Image Preview
-                    </h2>
-                    {uploadData && !transparentData && (
-                      <p>Processing image... Please wait.</p>
-                    )}
-                    {transparentData && (
-                      <CldImage
-                        width={imageSize.width}
-                        height={imageSize.height}
-                        src={transparentData.secure_url}
-                        alt="Avatar preview"
-                        className="max-w-full h-auto"
-                      />
-                    )}
-                  </div>
-                )}
+                    Your Name
+                  </label>
+                  <Input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your name"
+                    onChange={handleNameChange}
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+
+                {/* Story selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Choose Your Story
+                  </label>
+                  <Select onValueChange={handleStorySelect}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a story" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stories.map((story) => (
+                        <SelectItem key={story.id} value={story.id}>
+                          {story.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Image upload */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Upload Your Avatar
+                  </label>
+                  {!uploadData ? (
+                    <CldUploadWidget
+                      uploadPreset="halloween-story"
+                      onSuccess={(result) => {
+                        const info = result.info as CloudinaryUploadWidgetInfo;
+                        setImageSize({
+                          width: info.width,
+                          height: info.height,
+                        });
+                        setUploadData(info);
+                        setImagePreview(info.secure_url);
+                      }}
+                    >
+                      {({ open }) => (
+                        <Button onClick={() => open()}>Upload Image</Button>
+                      )}
+                    </CldUploadWidget>
+                  ) : (
+                    <div>
+                      <h2 className="text-xl font-semibold mb-2">
+                        Image Preview
+                      </h2>
+                      {uploadData && !transparentData && (
+                        <p>Processing image... Please wait.</p>
+                      )}
+                      {transparentData && (
+                        <CldImage
+                          width={imageSize.width}
+                          height={imageSize.height}
+                          src={transparentData.secure_url}
+                          alt="Avatar preview"
+                          className="max-w-full h-auto"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {isDevelopment && (
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-2">Development Mode</h2>
+                <p>Using default values for name, image, and story.</p>
               </div>
-            </>
-          )}
+            )}
 
-          {isDevelopment && (
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Development Mode</h2>
-              <p>Using default values for name, image, and story.</p>
-            </div>
-          )}
+            <Button
+              onClick={handleStartAdventure}
+              disabled={
+                (!transparentData && !isDevelopment) || !selectedStoryId
+              }
+            >
+              Start Adventure
+            </Button>
+          </CardContent>
+        </Card>
 
-          <Button
-            onClick={handleStartAdventure}
-            disabled={(!transparentData && !isDevelopment) || !selectedStoryId}
-          >
-            Start Adventure
-          </Button>
-        </CardContent>
-      </Card>
+        <div className="w-full md:w-1/2">
+          {selectedStoryImage && (
+            <motion.img
+              src={selectedStoryImage}
+              alt="Selected Story"
+              className="w-full h-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -75,9 +75,10 @@ export default function RootLayout({
         <FloatingNav />
         <div className="pointer-events-none fixed left-0 top-0 z-50 h-screen w-full">
           <div className="crt pointer-events-none fixed left-0 top-0 z-50 h-screen w-full" />
+          <div className="lines" />
           <NoiseBackground />
         </div>
-        <div className="relative h-screen w-full overflow-hidden ">
+        <div className="relative h-screen w-full overflow-scroll ">
           <StoryProvider>{children}</StoryProvider>
         </div>
       </body>

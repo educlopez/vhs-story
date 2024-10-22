@@ -96,65 +96,63 @@ const Story = () => {
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black bg-opacity-50 ">
-        <div className="container mx-auto px-4 py-8 relative z-10 h-screen w-full">
-          <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
-            <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center">
-              {selectedStory.title} <Icon name="play" size={24} />
-            </span>
-            <div className="flex mb-6">
-              <div className="w-full pl-6 ">
-                <TextGenerateEffect
-                  key={`text-generate-${currentScene}`}
-                  duration={2}
-                  filter={false}
-                  words={scene.text}
-                />
-              </div>
+        <div className="relative mx-auto max-w-2xl space-y-10 px-4 pb-16 pt-14 sm:px-6 lg:max-w-5xl lg:px-8">
+          <span className="text-3xl font-bold mb-6 text-white flex flex-row items-center vhs-effect">
+            {selectedStory.title} <Icon name="play" size={24} />
+          </span>
+          <div className="flex mb-6">
+            <div className="w-full pl-6 ">
+              <TextGenerateEffect
+                key={`text-generate-${currentScene}`}
+                duration={2}
+                filter={false}
+                words={scene.text}
+              />
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-col items-center justify-center absolute bottom-12 w-full">
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="flex flex-col justify-center items-center gap-2 mb-2"
-              >
-                {scene.choices.length > 0 ? (
-                  scene.choices.map((choice, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => handleChoice(choice.nextScene)}
-                    >
-                      {choice.text}
-                    </Button>
-                  ))
-                ) : (
-                  <Button onClick={() => handleChoice("end")}>Finish</Button>
-                )}
-              </motion.div>
-            </AnimatePresence>
-            <CldImage
-              width="100"
-              height="100"
-              src={image}
-              alt={`${name}'s avatar`}
-              className={`rounded-full ${isMonsterForm ? "monster-form" : ""}`}
-              underlay={scene.background}
-              replace={
-                isMonsterForm
-                  ? {
-                      from: "person",
-                      to:
-                        selectedStory?.monsterTransformation?.monster ||
-                        "monster",
-                      preserveGeometry: true,
-                    }
-                  : undefined
-              }
-            />
-          </div>
+        <div className="flex flex-col items-center justify-center absolute bottom-12 w-full">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex flex-col justify-center items-center gap-2 mb-2"
+            >
+              {scene.choices.length > 0 ? (
+                scene.choices.map((choice, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => handleChoice(choice.nextScene)}
+                  >
+                    {choice.text}
+                  </Button>
+                ))
+              ) : (
+                <Button onClick={() => handleChoice("end")}>Finish</Button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+          <CldImage
+            width="100"
+            height="100"
+            src={image}
+            alt={`${name}'s avatar`}
+            className={`rounded-full ${isMonsterForm ? "monster-form" : ""}`}
+            underlay={scene.background}
+            replace={
+              isMonsterForm
+                ? {
+                    from: "person",
+                    to:
+                      selectedStory?.monsterTransformation?.monster ||
+                      "monster",
+                    preserveGeometry: true,
+                  }
+                : undefined
+            }
+          />
         </div>
       </div>
     </div>

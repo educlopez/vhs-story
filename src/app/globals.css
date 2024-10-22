@@ -30,30 +30,130 @@ body {
 }
 
 .vhs-effect {
-  animation: vhs-blur 0.2s infinite;
-  filter: contrast(1.2) brightness(1.1);
+  animation: rgbText 1s steps(9) 0s infinite alternate;
 }
 
-.vhs-effect::before {
+.lines {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 300;
+  opacity: 0.6;
+  will-change: opacity;
+  animation: opacity 3s linear infinite;
+}
+
+.lines:before {
   content: "";
   position: absolute;
-  top: 0;
   left: 0;
+  top: 0;
   right: 0;
   bottom: 0;
   pointer-events: none;
-  mix-blend-mode: overlay;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 51%
+  );
+  background-size: 100% 4px;
+  will-change: background, background-size;
+  animation: scanlines 0.2s linear infinite;
 }
 
-.vhs-effect::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  mix-blend-mode: overlay;
+@keyframes scanlines {
+  from {
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 51%
+    );
+    background-size: 100% 4px;
+  }
+  to {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5) 50%,
+      transparent 51%
+    );
+    background-size: 100% 4px;
+  }
+}
+
+@keyframes rgbText {
+  0% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      0px 0 1px rgba(251, 0, 231, 0.8),
+      0 0px 3px rgba(0, 233, 235, 0.8),
+      0px 0 3px rgba(0, 242, 14, 0.8),
+      0 0px 3px rgba(244, 45, 0, 0.8),
+      0px 0 3px rgba(59, 0, 226, 0.8);
+  }
+  25% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      0px 0 1px rgba(251, 0, 231, 0.8),
+      0 0px 3px rgba(0, 233, 235, 0.8),
+      0px 0 3px rgba(0, 242, 14, 0.8),
+      0 0px 3px rgba(244, 45, 0, 0.8),
+      0px 0 3px rgba(59, 0, 226, 0.8);
+  }
+  45% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      5px 0 1px rgba(251, 0, 231, 0.8),
+      0 5px 1px rgba(0, 233, 235, 0.8),
+      -5px 0 1px rgba(0, 242, 14, 0.8),
+      0 -5px 1px rgba(244, 45, 0, 0.8),
+      5px 0 1px rgba(59, 0, 226, 0.8);
+  }
+  50% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      -5px 0 1px rgba(251, 0, 231, 0.8),
+      0 -5px 1px rgba(0, 233, 235, 0.8),
+      5px 0 1px rgba(0, 242, 14, 0.8),
+      0 5px 1px rgba(244, 45, 0, 0.8),
+      -5px 0 1px rgba(59, 0, 226, 0.8);
+  }
+  55% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      0px 0 3px rgba(251, 0, 231, 0.8),
+      0 0px 3px rgba(0, 233, 235, 0.8),
+      0px 0 3px rgba(0, 242, 14, 0.8),
+      0 0px 3px rgba(244, 45, 0, 0.8),
+      0px 0 3px rgba(59, 0, 226, 0.8);
+  }
+  90% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      -5px 0 1px rgba(251, 0, 231, 0.8),
+      0 5px 1px rgba(0, 233, 235, 0.8),
+      5px 0 1px rgba(0, 242, 14, 0.8),
+      0 -5px 1px rgba(244, 45, 0, 0.8),
+      5px 0 1px rgba(59, 0, 226, 0.8);
+  }
+  100% {
+    text-shadow:
+      -1px 1px 8px rgba(255, 255, 255, 0.6),
+      1px -1px 8px rgba(255, 255, 235, 0.7),
+      5px 0 1px rgba(251, 0, 231, 0.8),
+      0 -5px 1px rgba(0, 233, 235, 0.8),
+      -5px 0 1px rgba(0, 242, 14, 0.8),
+      0 5px 1px rgba(244, 45, 0, 0.8),
+      -5px 0 1px rgba(59, 0, 226, 0.8);
+  }
 }
 
 @layer utilities {
