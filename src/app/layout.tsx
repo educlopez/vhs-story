@@ -4,6 +4,7 @@ import { StoryProvider } from "@/context/StoryContext";
 import localFont from "next/font/local";
 import NoiseBackground from "../components/NoiseBackground";
 import FloatingNav from "@/components/FloatingNav";
+import { Analytics } from "@/components/Analytics";
 const horrorFont = localFont({
   src: "assets/fonts/OPTIBrianJamesBoldCond.woff",
   display: "swap",
@@ -81,6 +82,7 @@ export default function RootLayout({
         <div className="relative h-screen w-full overflow-scroll ">
           <StoryProvider>{children}</StoryProvider>
         </div>
+        <Analytics />
       </body>
     </html>
   );
