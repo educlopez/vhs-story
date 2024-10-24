@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import mansion from "@/app/assets/images/mansion-vhs.png";
 import vampire from "@/app/assets/images/vampire-vhs.png";
+import itclown from "@/app/assets/images/it-vhs.png";
 interface TransparentData {
   secure_url: string;
 }
@@ -43,6 +44,8 @@ const Start = () => {
   const [selectedStoryImage, setSelectedStoryImage] = useState<string | null>(
     null
   );
+  const [useDemoAvatar, setUseDemoAvatar] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const isDevelopment = false;
 
@@ -56,8 +59,8 @@ const Start = () => {
       setImage(
         "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0"
       );
-      setSelectedStory(stories.find((s) => s.id === "vampire-curse") || null);
-      setSelectedStoryId("vampire-curse");
+      setSelectedStory(stories.find((s) => s.id === "it-clown-terror") || null);
+      setSelectedStoryId("it-clown-terror");
       setTransparentData({
         secure_url:
           "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0",
@@ -75,18 +78,34 @@ const Start = () => {
     if (story) {
       setSelectedStory(story);
       setSelectedStoryImage(
-        story.id === "haunted-mansion" ? mansion.src : vampire.src
+        story.id === "haunted-mansion" ? mansion.src :
+        story.id === "vampire-curse" ? vampire.src :
+        story.id === "it-clown-terror" ? itclown.src :
+        null
       );
     }
   };
 
+  const demoAvatarUrl = "https://res.cloudinary.com/dyzxnud9z/image/upload/c_limit,w_640/f_auto/q_auto/v1729501370/cr3mokn1zhmsag2asroe?_a=BAVCyODW0"; // URL de la imagen demo
+
+  const handleDemoAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUseDemoAvatar(e.target.checked);
+    if (e.target.checked) {
+      setImagePreview(demoAvatarUrl); // Mostrar la imagen demo en la vista previa
+      setUploadData(null); // No se sube nada a Cloudinary
+      setImage(demoAvatarUrl); // Usar la imagen demo en la lógica
+    } else {
+      setImagePreview(uploadData?.secure_url || null); // Mostrar la imagen cargada si no se usa la demo
+    }
+  };
+
   const handleStartAdventure = () => {
-    if ((transparentData || isDevelopment) && selectedStoryId) {
+    if ((transparentData || useDemoAvatar) && selectedStoryId) {
       const story = stories.find((s) => s.id === selectedStoryId);
       if (story) {
         setSelectedStory(story);
         setCurrentScene(story.initialScene);
-        if (!isDevelopment && transparentData) {
+        if (!useDemoAvatar && transparentData) {
           setImage(transparentData.secure_url);
         }
         router.push("/story");
@@ -111,8 +130,12 @@ const Start = () => {
         }),
       }).then((r) => r.json());
 
-      const transparentResult = await checkStatus();
+      if (results.error) {
+        setErrorMessage("Due to lack of credits, this function is not available. You can use the demo image.");
+        return;
+      }
 
+      const transparentResult = await checkStatus();
       setTransparentData(transparentResult);
 
       async function checkStatus() {
@@ -185,7 +208,19 @@ const Start = () => {
                   <label className="block text-sm font-medium mb-2">
                     Upload Your Avatar
                   </label>
-                  {!uploadData ? (
+                  <div className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      id="demo-avatar"
+                      checked={useDemoAvatar}
+                      onChange={handleDemoAvatarChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="demo-avatar" className="text-sm">
+                      Use Demo Avatar
+                    </label>
+                  </div>
+                  {!uploadData && !useDemoAvatar ? (
                     <CldUploadWidget
                       uploadPreset="halloween-story"
                       onSuccess={(result) => {
@@ -207,17 +242,30 @@ const Start = () => {
                       <h2 className="text-xl font-semibold mb-2">
                         Image Preview
                       </h2>
-                      {uploadData && !transparentData && (
+                      {uploadData && !transparentData && !errorMessage &&(
                         <p>Processing image... Please wait.</p>
                       )}
-                      {transparentData && (
+                      {errorMessage && (
+                        <div className="text-red-500">{errorMessage}</div>
+                      )}
+                      {useDemoAvatar ? (
                         <CldImage
                           width={imageSize.width}
                           height={imageSize.height}
-                          src={transparentData.secure_url}
-                          alt="Avatar preview"
+                          src={demoAvatarUrl}
+                          alt="Demo Avatar Preview"
                           className="max-w-full h-auto"
                         />
+                      ) : (
+                        transparentData && (
+                          <CldImage
+                            width={imageSize.width}
+                            height={imageSize.height}
+                            src={transparentData.secure_url}
+                            alt="Avatar preview"
+                            className="max-w-full h-auto"
+                          />
+                        )
                       )}
                     </div>
                   )}
@@ -235,7 +283,7 @@ const Start = () => {
             <Button
               onClick={handleStartAdventure}
               disabled={
-                (!transparentData && !isDevelopment) || !selectedStoryId
+                (!transparentData && !useDemoAvatar) || !selectedStoryId
               }
             >
               Start Adventure

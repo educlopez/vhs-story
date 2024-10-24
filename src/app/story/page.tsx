@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { TextGenerateEffect } from "@/components/TextGenerate";
+import useSound from "use-sound";
+
 const Story = () => {
   const router = useRouter();
+  const [playbackRate, setPlaybackRate] = useState(0.75);
+
+
   const {
     name,
     image,
@@ -49,11 +54,15 @@ const Story = () => {
     }
   }, [currentScene, selectedStory]);
 
+   const [play] = useSound("./music/background-music.mp3", {
+     playbackRate,
+   });
   useEffect(() => {
+    play();
     if (!selectedStory) {
       router.push("/start");
     }
-  }, [selectedStory, router]);
+  }, [selectedStory, router, play]);
 
   useEffect(() => {
     updateFinalAvatar();
@@ -71,6 +80,7 @@ const Story = () => {
       }, 100);
     } else {
       setCurrentScene(nextScene);
+
       if (
         selectedStory?.monsterTransformation &&
         nextScene === selectedStory.monsterTransformation.scene
