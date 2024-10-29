@@ -79,7 +79,7 @@ export default function RootLayout({
           <div className="lines" />
           <NoiseBackground />
         </div>
-        <div className="relative h-screen w-full overflow-scroll ">
+        <div className="relative h-screen w-full overflow-auto ">
           <StoryProvider>{children}</StoryProvider>
         </div>
         <Analytics />
