@@ -5,21 +5,9 @@ import { CldImage } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
 const End = () => {
-  const { name, finalAvatarImage, selectedStory, image } = useStory();
-  const [imageKey, setImageKey] = useState(Date.now());
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    console.log("Final Avatar Image:", finalAvatarImage);
-    setImageKey(Date.now());
-  }, [finalAvatarImage]);
-
-  useEffect(() => {
-    forceUpdate({});
-  }, [finalAvatarImage]);
+  const { name, finalAvatarImage, selectedStory } = useStory();
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -73,7 +61,7 @@ const End = () => {
         className="mb-6"
       >
         <CldImage
-          key={imageKey}
+          key={finalAvatarImage}
           width="300"
           height="300"
           src={finalAvatarImage}
