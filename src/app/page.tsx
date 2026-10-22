@@ -13,9 +13,8 @@ export default function Home() {
         <Image
           src={horrorHouse}
           alt="Horror House"
-          objectFit="cover"
-          layout="fill"
-          className="[mask-image:radial-gradient(circle,#000_10%,transparent_80%)] blur-sm"
+          fill
+          className="object-cover [mask-image:radial-gradient(circle,#000_10%,transparent_80%)] blur-sm"
         />
       </div>
 
@@ -36,8 +35,8 @@ export default function Home() {
         <Image
           src={forest}
           alt="Horror House"
-          objectFit="cover"
-          layout="fill"
+          fill
+          className="object-cover"
         />
       </div>
     </>
