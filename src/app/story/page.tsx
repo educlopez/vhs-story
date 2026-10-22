@@ -23,7 +23,15 @@ const Story = () => {
     setFinalAvatarImage,
     setSelectedStory,
   } = useStory();
-  const [isMonsterForm, setIsMonsterForm] = useState(false);
+  const isMonsterScene = Boolean(
+    selectedStory?.monsterTransformation &&
+      currentScene === selectedStory.monsterTransformation.scene
+  );
+  const [stickyMonsterForm, setStickyMonsterForm] = useState(false);
+  if (isMonsterScene && !stickyMonsterForm) {
+    setStickyMonsterForm(true);
+  }
+  const isMonsterForm = stickyMonsterForm || isMonsterScene;
 
   const updateFinalAvatar = useCallback(() => {
     if (selectedStory?.scenes[currentScene] && image) {
@@ -45,16 +53,7 @@ const Story = () => {
     }
   }, [selectedStory, currentScene, image, setFinalAvatarImage, isMonsterForm]);
 
-  useEffect(() => {
-    if (
-      selectedStory?.monsterTransformation &&
-      currentScene === selectedStory.monsterTransformation.scene
-    ) {
-      setIsMonsterForm(true);
-    }
-  }, [currentScene, selectedStory]);
-
-   const [play] = useSound("./music/background-music.mp3", {
+  const [play] = useSound("./music/background-music.mp3", {
      playbackRate,
    });
   useEffect(() => {
@@ -80,12 +79,11 @@ const Story = () => {
       }, 100);
     } else {
       setCurrentScene(nextScene);
-
       if (
         selectedStory?.monsterTransformation &&
         nextScene === selectedStory.monsterTransformation.scene
       ) {
-        setIsMonsterForm(true);
+        setStickyMonsterForm(true);
       }
       updateFinalAvatar();
     }
