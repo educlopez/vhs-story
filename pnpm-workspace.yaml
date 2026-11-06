@@ -1,0 +1,11 @@
+# Supply-chain hardening (see the supply-chain-security skill).
+# Cooldown: skip packages published less than 2 days ago.
+minimumReleaseAge: 2880
+
+# Block transitive deps from git repos or raw tarball URLs.
+blockExoticSubdeps: true
+
+# Only these packages may run install/build scripts.
+allowBuilds:
+  # Fallback download; the native binary comes as an optional dependency.
+  unrs-resolver: false
