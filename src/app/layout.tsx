@@ -18,7 +18,7 @@ const pixelFont = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vhs-story.vercel.app/"),
+  metadataBase: new URL("https://vhs.educalvolopez.com/"),
   title: {
     default: "Interactive Halloween Story",
     template: "%s | VHS Story",
@@ -30,11 +30,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Interactive Halloween Story",
     description: "Choose your own spooky adventure",
-    url: "https://vhs-story.vercel.app",
+    url: "https://vhs.educalvolopez.com",
     siteName: "Interactive Halloween Story",
     images: [
       {
-        url: "https://vhs-story.vercel.app/og.jpg",
+        url: "https://vhs.educalvolopez.com/og.jpg",
         width: 1920,
         height: 1080,
       },
